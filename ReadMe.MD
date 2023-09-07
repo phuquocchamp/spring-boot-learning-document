@@ -488,7 +488,7 @@ Một số Annotation quan trọng cần biết:
     >
 14. ***ResponseEntity***: là một ***class* **được sử dụng để đại diện cho phản hồi HTTP hoàn chỉnh bao gồm** *cả dữ liêu phản hồi , tiêu đề và mã trạng thái.* **`ResponseEntity` giúp bạn tùy chỉnh phàn hồi HTTP một cách linh hoạt hơn bằng cách cho phép bạn đặt trạng thái, tiêu đề và dữ liệu phản hồi.
 
-## 9. Spring Boot Data JPA -  Build CRUB REST API
+## 9. Spring Boot Data JPA (21-22-23)
 
 #### 9.1 Spring Boot Data JPA
 
@@ -502,7 +502,7 @@ Với Spring Boot Data JPA, bạn có thể tiết kiệm thời gian và công 
 
 #### 9.2 ORM ?
 
-ORM( Object - Relational Mapping) là một kĩ thuật trong lập trình phần mềm để ánh xạ dữ liệu 		giữa cơ sở dữ liệu quan hệ (Relational Database) và các đối tượng (object) trong ngôn ngữ lập trình hướng dối tượng.
+ORM( Object - Relational Mapping) là một kĩ thuật trong lập trình phần mềm để ánh xạ dữ liệu giữa cơ sở dữ liệu quan hệ (Relational Database) và các đối tượng (object) trong ngôn ngữ lập trình hướng dối tượng.
 
 Khi sử dụng ORM, ta có thể làm việc với cơ sở dữ liệu mà không cần viết các truy vấn SQL trực tiếp, mà thay vào đó sử dụng các đối tượng và phương thức của ngôn ngữ lập trình hướng đối tượng. ORM cung cấp một lớp trung gian giữa ứng dụng và cơ sở dữ liệu, giúp quản lí và ánh xạ dữ liệu giữa hai hệ thống này.
 
@@ -761,3 +761,54 @@ private Long id;
 > Trong MySQL, GenerationType.Auto thường sẽ sử dụng `Strategy` là `GenerationType.Sequence` là mặc định.
 
 Lưu ý rằng giá trị GenerationType.AUTO có thể không hoạt động đúng với tất cả các cơ sở dữ liệu, do đó, nếu bạn muốn xác định rõ chiến lược sinh khóa chính, hãy chọn một giá trị khác như IDENTITY, SEQUENCE, HOẶC TABLE tương ứng với cơ sở dữ liệu của bạn.
+
+##### 9.9.4 @CreationTimestamp và @UpdateTimestamp
+
+> @CreationTimeStamp và @UpdateTimeStamp là 2 phần của Hibernate ORM, 2 annotation này dùng để cập nhật các trường thời gian tạo và thời gian cập nhật trong đối tượng mà chúng ta tạo.
+
+- `CreationTimeStamp` : khi một đối tượng mới được lưu trữ vào cơ sở dữ liệu (thao tác insert), trường được đánh dấu với @CreationTimestamp sẽ tự động đựơc cập nhật với gia trị hiện tại. Điều này đảm bảo chúng ta không cần phải thực hiện thiết lập thủ công thời gian tạo khi lưu trữ đối tượng.
+- `UpdateTimestamp` : khi một đối tượng tồn tại và được cập nhật trong cơ sở dữ liệu (thao tác update), trừờng được đánh dấu @UpdateTimestamp sẽ tự động cập nhật thời gian khi đối tượng được update mà không cần phải thiết lập thủ công.
+
+> Khi ta sử dụng 2 annotation này thì Hibernate sẽ tự động xử lí các trường thời gian tạo và thời gian cập nhật cho chúng ta. Ta không cần phải thiết lập thông qua câu lệnh thủ công. Khi sử dụng 2 annotation này thì cần khai báo kiểu dữ liệu thích hợp để lưu trữ thời gian. Ví dụ trong LocalDateTime hoặc Timestamp trong java.
+
+##### 9.9.5 LomBook ?
+
+> Lombook là một thư viện Java được sử dụng để giảm bớt việc viết mã boilerplate (mã lặp lại) trong các đối tượng. Nó cung cấp các Annotation để tự động tạo các phương thức Setter, Getter, Constructor, .... cho các trừng trong lớp.
+
+Lombok giúp viết code ngắn gọn hơn và giảm bớt công việc lặp lại khi tạo các phương thức getter/setter và các phương thức đặc biệt khác. Thay vì bạn phải viết các phương thức này thủ công, bạn chỉ cần sử dụng các annotation của Lombok và Lombok sẽ tự động tạo các phương thức này cho bạn trong quá trình biên dịch.
+
+##### 9.9.6 Spring Data JPA Repository Interface và Cấu Trúc Phân tần của nó.
+
+![1686842979608](image/ReadMe/1686842979608.png)
+
+![1686843072169](image/ReadMe/1686843072169.png)
+
+Spring Data JPA Repository là một tầng trung gian giữa ứng dụng của bạn và cơ sở dữ liệu. Nó cung cấp một cách tiện lợi để tương tác với cơ sở dữ liệu bằng cách sử dụng các phương thức trừu tượng mà bạn không cần phải triển khai thủ công. Repository định nghĩa các phương thức tiêu chuẩn để thao tác với dữ liệu, chẳng hạn như tạo, đọc, cập nhật và xóa (CRUD operations).
+
+Hierachy (cấu trúc phân cấp) của Spring Data JPA Repository bao gồm các lớp và interface sau đây:
+
+1. Repository: Đây là interface cơ bản nhất trong hierachy. Nó định nghĩa các phương thức CRUD cơ bản như `save()`, `findById()`, `findAll()`, `delete()`, v.v. Các interface Repository không cung cấp khả năng truy vấn phức tạp hơn.
+2. CrudRepository: Kế thừa từ Repository và mở rộng chức năng của nó bằng cách cung cấp các phương thức tiện ích CRUD. Ngoài các phương thức CRUD cơ bản, CrudRepository cũng cung cấp các phương thức như `count()`, `existsById()`, `findAllById()`, v.v.
+3. PagingAndSortingRepository: Kế thừa từ CrudRepository và mở rộng khả năng phân trang và sắp xếp dữ liệu. Nó cung cấp các phương thức như `findAll(Pageable pageable)`, `findAll(Sort sort)`, v.v. để hỗ trợ phân trang và sắp xếp kết quả truy vấn.
+4. JpaRepository: Kế thừa từ PagingAndSortingRepository và cung cấp các phương thức truy vấn bổ sung. JpaRepository hỗ trợ các phương thức truy vấn động bằng cách sử dụng `@Query` và cung cấp các phương thức tiện ích như `flush()`, `saveAndFlush()`, `deleteInBatch()`, v.v.
+5. JpaSpecificationExecutor: Đây là một interface riêng biệt không có sự phụ thuộc vào hierachy trên. Nó cung cấp khả năng tìm kiếm dựa trên các tiêu chí động (dynamic criteria) bằng cách sử dụng Specifications.
+
+Khi sử dụng Spring Data JPA Repository, bạn có thể tạo interface cho lớp đối tượng của mình và kế thừa các interface trong hierachy trên. Spring Data JPA sẽ tự động tạo các phương thức thích hợp cho bạn dựa trên tên phương thức. Bạn cũng có thể tạo các phương thức truy vấn động bằng cách sử dụng các annotation như `@Query`, `@NamedQuery` hoặc `@QuerydslPredicate`.
+
+Ví dụ:
+
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findByLastName(String lastName);
+}
+```
+
+Trong ví dụ trên, `UserRepository` kế thừa từ `JpaRepository` và cung cấp một phương thức tìm kiếm `findByLastName()`. Khi bạn sử dụng `UserRepository`, bạn có thể gọi các phương thức như `save()`, `findAll()`, `findByLastName()`, v.v. mà không cần triển khai chúng một cách thủ công. Spring Data JPA sẽ tự động thực hiện các truy vấn phù hợp và xử lý các tác vụ liên quan đến cơ sở dữ liệu.
+
+![1686843185132](image/ReadMe/1686843185132.png)
+
+##### 9.10 Important Spring Data JPA Repository Methods
+
+###### 9.10.1 Save()
